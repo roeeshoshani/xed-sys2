@@ -37,13 +37,29 @@ fn main() {
     println!("cargo:rustc-link-search=native={}/lib", xed_install_dir);
     println!("cargo:rustc-link-lib=static=xed");
 
+    let xed_include_dir = format!("{}/include", xed_install_dir);
+    let wrapped_static_fns_file_path = format!("{}/xed_wrapped_static_fns.c", out_dir);
     let bindings = bindgen::Builder::default()
-        .clang_arg(format!("--include-directory={}/include", xed_install_dir))
+        .wrap_static_fns(true)
+        .wrap_static_fns_path(wrapped_static_fns_file_path.as_str())
+        .clang_arg(format!("-I{}", xed_include_dir))
+        .clang_arg("-DXED_ENCODER")
+        .clang_arg("-DXED_DECODER")
         .header("xed.h")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .unwrap();
+
     bindings
         .write_to_file(format!("{}/xed.rs", out_dir))
         .unwrap();
+
+    cc::Build::new()
+        .file(wrapped_static_fns_file_path.as_str())
+        .flag("-DXED_ENCODER")
+        .flag("-DXED_DECODER")
+        .flag_if_supported("-Wno-duplicate-decl-specifier")
+        .include(xed_include_dir.as_str())
+        .include(cwd)
+        .compile("xed_wrapped_static_fns");
 }
