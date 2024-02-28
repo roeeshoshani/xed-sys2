@@ -152,8 +152,9 @@ fn main() {
         .clang_arg(format!("-I{}", xed_include_dir))
         .clang_arg("-DXED_ENCODER")
         .clang_arg("-DXED_DECODER")
-        .rustified_enum("xed_machine_mode_enum_t")
-        .rustified_enum("xed_address_width_enum_t")
+        .default_enum_style(bindgen::EnumVariation::Rust {
+            non_exhaustive: false,
+        })
         .use_core()
         .header("xed.h")
         .parse_callbacks(Box::new(XedBindgenParseCallbacks {
