@@ -127,6 +127,7 @@ fn main() {
     cmd.arg("-j")
         .arg(num_jobs_str.as_str())
         .arg("--static")
+        .arg("--enc2")
         .arg(format!("--install-dir={}", xed_install_dir))
         .current_dir(xed_build_dir.as_str());
 
