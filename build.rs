@@ -128,6 +128,7 @@ fn main() {
         .arg(num_jobs_str.as_str())
         .arg("--static")
         .arg(format!("--install-dir={}", xed_install_dir))
+        .env("PYTHONDONTWRITEBYTECODE", "1")
         .current_dir(xed_build_dir.as_str());
 
     if profile == "release" {
