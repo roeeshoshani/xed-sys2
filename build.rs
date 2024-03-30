@@ -120,6 +120,8 @@ fn main() {
 
     println!("cargo:rerun-if-changed-env=OUT_DIR");
     println!("cargo:rerun-if-changed-env=PROFILE");
+    println!("cargo:rerun-if-changed={}/xed", cwd);
+    println!("cargo:rerun-if-changed={}/mbuild", cwd);
 
     create_dir_all(xed_build_dir.as_str()).unwrap();
 
